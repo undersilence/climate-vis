@@ -1,3 +1,4 @@
+// 处理 glsl 文件的 import，直接转成字符串
 function glsl() {
   return {
     name: 'glsl',
