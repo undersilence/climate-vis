@@ -1,6 +1,9 @@
 import mapboxgl from 'mapbox-gl';
 import { MAPBOX_TOKEN } from '/src/const';
 import { onLoad, onUpdate } from './wind-main';
+import { loadControls, wind2020 } from './controls';
+
+loadControls();
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
 const map = new mapboxgl.Map({
@@ -11,6 +14,14 @@ const map = new mapboxgl.Map({
   pitch: 45,
   bearing: -17.6,
 });
+
+function rotateCamera(timestamp) {
+  // clamp the rotation between 0 -360 degrees
+  // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+  map.rotateTo((timestamp / wind2020.rotateStep) % 360, { duration: 0 });
+  // Request the next frame of the animation.
+  requestAnimationFrame(rotateCamera);
+}
 
 map.on('load', () => {
   // Start the animation.
