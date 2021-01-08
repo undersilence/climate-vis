@@ -1,6 +1,33 @@
-import mapboxgl from 'mapbox-gl';
 import * as util from '/src/mapbox/util';
 import WindGL from '/src/mapbox/windgl';
+import pVert from './shaders_ext/particle.vert.glsl';
+import pFrag from './shaders_ext/particle.frag.glsl';
+
+export const windLayer = {
+  id: 'wind-layer',
+  type: 'custom',
+  wind: null,
+  map: null,
+  // Initialize here
+
+  onAdd(map, gl) {
+    this.map = map;
+    this.wind = new WindGL(gl);
+    this.wind.numParticles = 65536;
+  },
+
+  // Render loop
+  // WARNING: Run iff user triggered event
+  render(gl, matrix) {
+    if (this.wind.windData) {
+      this.wind.draw(matrix);
+      this.map.triggerRepaint();
+      return true;
+    }
+    updateWind(0, this.wind);
+    return false;
+  },
+};
 
 const windFiles = {
   0: '2016112000',
@@ -14,6 +41,7 @@ const windFiles = {
   48: '2016112200',
 };
 
+/*
 export function onLoad(map, gl) {
   // create GLSL source for vertex shader
   const vertexSource = ''
@@ -100,6 +128,7 @@ export function onUpdate(gl, matrix) {
   }
   updateWind(0, this.wind);
 }
+*/
 
 function updateWind(name, wind) {
   getJSON(`wind/${windFiles[name]}.json`, (windData) => {

@@ -11,5 +11,6 @@
       "/src/*": ["./src/*"]
     }
   },
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist"],
+  "files": ["./src/mapbox/wind-main.d.ts"]
 }
