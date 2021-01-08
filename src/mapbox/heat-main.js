@@ -1,7 +1,5 @@
 import * as util from '/src/mapbox/util';
 import WindGL from '/src/mapbox/windgl';
-import pVert from './shaders_ext/particle.vert.glsl';
-import pFrag from './shaders_ext/particle.frag.glsl';
 
 export const windLayer = {
   id: 'wind-layer',
@@ -12,7 +10,7 @@ export const windLayer = {
 
   onAdd(map, gl) {
     this.map = map;
-    this.wind = new WindGL(gl);
+    this.wind = new WindHeatGL(gl);
     this.wind.numParticles = 65536;
     updateWind(0, this.wind);
   },

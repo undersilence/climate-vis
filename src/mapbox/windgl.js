@@ -116,6 +116,7 @@ export default class WindGL {
 
   draw(matrix) {
     const { gl } = this;
+    // console.log(gl);
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.STENCIL_TEST);
     this.mvpMatrix = matrix;
@@ -128,12 +129,13 @@ export default class WindGL {
   }
 
   drawScreen() {
+    // gl.Clear();
     const { gl } = this;
     // draw the screen into a temporary framebuffer to retain it as the background on the next frame
-    util.bindFramebuffer(gl, this.framebuffer, this.screenTexture);
+    // util.bindFramebuffer(gl, this.framebuffer, this.screenTexture);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
-    // this.drawTexture(this.backgroundTexture, this.fadeOpacity);
+    this.drawTexture(this.backgroundTexture, this.fadeOpacity);
     this.drawParticles();
 
     util.bindFramebuffer(gl, null);
