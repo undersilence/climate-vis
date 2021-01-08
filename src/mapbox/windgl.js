@@ -130,9 +130,10 @@ export default class WindGL {
 
   drawScreen() {
     // gl.Clear();
+    // this.resize();
     const { gl } = this;
     // draw the screen into a temporary framebuffer to retain it as the background on the next frame
-    // util.bindFramebuffer(gl, this.framebuffer, this.screenTexture);
+    util.bindFramebuffer(gl, this.framebuffer, this.screenTexture);
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     this.drawTexture(this.backgroundTexture, this.fadeOpacity);

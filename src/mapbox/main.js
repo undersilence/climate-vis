@@ -119,3 +119,13 @@ map.on('load', () => {
   map.addLayer(windLayer);
   map.addLayer(highlightLayer);
 });
+
+map.on('wheel', () => {
+  if (windLayer.wind) { windLayer.wind.resize(); }
+});
+map.on('dragstart', () => {
+  if (windLayer.wind) { windLayer.wind.resize(); }
+});
+map.on('move', () => {
+  if (windLayer.wind) { windLayer.wind.resize(); }
+});
