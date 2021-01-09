@@ -1,7 +1,6 @@
 precision mediump float;
 
 attribute vec2 a_pos;
-uniform mat4 u_matrix;
 
 varying vec2 v_tex_pos;
 

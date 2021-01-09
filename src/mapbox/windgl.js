@@ -23,9 +23,7 @@ export default class WindGL {
   constructor(gl) {
     this.gl = gl;
 
-    this.mvpMatrix = null;
-
-    this.fadeOpacity = 0.996; // how fast the particle trails fade on each frame
+    this.fadeOpacity = 0.95; // how fast the particle trails fade on each frame
     this.speedFactor = 0.25; // how fast the particles move
     this.dropRate = 0.003; // how often the particles move to a random place
     this.dropRateBump = 0.01; // drop rate increase relative to individual particle speed
@@ -36,6 +34,7 @@ export default class WindGL {
 
     this.quadBuffer = util.createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
     this.framebuffer = gl.createFramebuffer();
+    this.mvpMatrix = null;
 
     this.setColorRamp(defaultRampColors);
     this.resize();
@@ -116,36 +115,38 @@ export default class WindGL {
 
   draw(matrix) {
     const { gl } = this;
-    // console.log(gl);
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.STENCIL_TEST);
-    this.mvpMatrix = matrix;
 
     util.bindTexture(gl, this.windTexture, 0);
     util.bindTexture(gl, this.particleStateTexture0, 1);
 
+    // console.log(matrix);
+    this.mvpMatrix = matrix;
     this.drawScreen();
     this.updateParticles();
   }
 
   drawScreen() {
-    // gl.Clear();
-    // this.resize();
     const { gl } = this;
     // draw the screen into a temporary framebuffer to retain it as the background on the next frame
     util.bindFramebuffer(gl, this.framebuffer, this.screenTexture);
+
+    // @ MetaRu(UnderSilence)
+    // clear screenTextures' colorbuffer, otherwise tails can't fade out.
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     this.drawTexture(this.backgroundTexture, this.fadeOpacity);
     this.drawParticles();
-
     util.bindFramebuffer(gl, null);
     // enable blending to support drawing on top of an existing background (e.g. a map)
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     this.drawTexture(this.screenTexture, 1.0);
     gl.disable(gl.BLEND);
-
+    // gl.clear(gl.COLOR_BUFFER_BIT);
     // save the current screen as the background for the next frame
     const temp = this.backgroundTexture;
     this.backgroundTexture = this.screenTexture;
@@ -153,7 +154,7 @@ export default class WindGL {
   }
 
   drawTexture(texture, opacity) {
-    const { gl, mvpMatrix } = this;
+    const { gl } = this;
     const program = this.screenProgram;
     gl.useProgram(program.program);
 
@@ -161,14 +162,12 @@ export default class WindGL {
     util.bindTexture(gl, texture, 2);
     gl.uniform1i(program.u_screen, 2);
     gl.uniform1f(program.u_opacity, opacity);
-    if (mvpMatrix) {
-      gl.uniformMatrix4fv(program.u_matrix, false, mvpMatrix);
-    }
+
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
 
   drawParticles() {
-    const { gl, mvpMatrix } = this;
+    const { gl } = this;
     const program = this.drawProgram;
     gl.useProgram(program.program);
 
@@ -182,9 +181,8 @@ export default class WindGL {
     gl.uniform1f(program.u_particles_res, this.particleStateResolution);
     gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
     gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
-    if (mvpMatrix) {
-      gl.uniformMatrix4fv(program.u_matrix, false, mvpMatrix);
-    }
+    gl.uniformMatrix4fv(program.u_matrix, false, this.mvpMatrix);
+
     gl.drawArrays(gl.POINTS, 0, this._numParticles);
   }
 

@@ -34,6 +34,7 @@ export default class WindGL {
 
     this.quadBuffer = util.createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
     this.framebuffer = gl.createFramebuffer();
+    this.mvpMatrix = null;
 
     this.setColorRamp(defaultRampColors);
     this.resize();
@@ -112,7 +113,7 @@ export default class WindGL {
     this.windTexture = util.createTexture(this.gl, this.gl.LINEAR, windData.image);
   }
 
-  draw() {
+  draw(matrix) {
     const { gl } = this;
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.STENCIL_TEST);
@@ -120,6 +121,8 @@ export default class WindGL {
     util.bindTexture(gl, this.windTexture, 0);
     util.bindTexture(gl, this.particleStateTexture0, 1);
 
+    console.log(matrix);
+    this.mvpMatrix = matrix;
     this.drawScreen();
     this.updateParticles();
   }
@@ -174,6 +177,7 @@ export default class WindGL {
     gl.uniform1f(program.u_particles_res, this.particleStateResolution);
     gl.uniform2f(program.u_wind_min, this.windData.uMin, this.windData.vMin);
     gl.uniform2f(program.u_wind_max, this.windData.uMax, this.windData.vMax);
+    gl.uniformMatrix4fv(program.u_matrix, false, this.mvpMatrix);
 
     gl.drawArrays(gl.POINTS, 0, this._numParticles);
   }
