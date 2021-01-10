@@ -1,5 +1,6 @@
 import * as dat from 'dat.gui';
 import { getJSON } from '/src/util';
+import { windLayer } from './wind-main';
 
 const gui = new dat.GUI({ autoPlace: false });
 
@@ -39,14 +40,14 @@ const windFiles = {
   162: '2020122918',
 };
 
-updateWind(0);
 function updateWind(name) {
   getJSON(`wind2020/${windFiles[name]}.json`, (windData) => {
     const windImage = new Image();
     windData.image = windImage;
     windImage.src = `wind2020/${windFiles[name]}.png`;
     windImage.onload = () => {
-      console.log(windData);
+      if (windLayer) {windLayer.wind.setWind(windData);}
+      else {console.log("windLayer is NULL");}
     };
   });
 }
