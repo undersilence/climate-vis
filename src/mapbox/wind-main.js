@@ -14,7 +14,7 @@ export const windLayer = {
     this.map = map;
     this.wind = new WindGL(gl);
     this.wind.numParticles = 65536;
-    updateWind(0, this.wind);
+    this.wind.updateWind(0);
   },
 
   // Render loop
@@ -29,39 +29,33 @@ export const windLayer = {
   },
 };
 
-const windFiles = {
-  0: '2016112000',
-  6: '2016112006',
-  12: '2016112012',
-  18: '2016112018',
-  24: '2016112100',
-  30: '2016112106',
-  36: '2016112112',
-  42: '2016112118',
-  48: '2016112200',
+export const windFiles = {
+  0: '2020122300',
+  6: '2020122306',
+  12: '2020122312',
+  18: '2020122318',
+  24: '2020122400',
+  30: '2020122406',
+  36: '2020122412',
+  42: '2020122418',
+  48: '2020122500',
+  54: '2020122506',
+  60: '2020122512',
+  66: '2020122518',
+  72: '2020122600',
+  78: '2020122606',
+  84: '2020122612',
+  90: '2020122618',
+  96: '2020122700',
+  102: '2020122706',
+  108: '2020122712',
+  114: '2020122718',
+  120: '2020122800',
+  126: '2020122806',
+  132: '2020122812',
+  138: '2020122818',
+  144: '2020122900',
+  150: '2020122906',
+  156: '2020122912',
+  162: '2020122918',
 };
-
-function updateWind(name, wind) {
-  getJSON(`wind/${windFiles[name]}.json`, (windData) => {
-    const windImage = new Image();
-    windData.image = windImage;
-    windImage.src = `wind/${windFiles[name]}.png`;
-    windImage.onload = () => {
-      wind.setWind(windData);
-    };
-  });
-}
-
-function getJSON(url, callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.responseType = 'json';
-  xhr.open('get', url, true);
-  xhr.onload = () => {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      callback(xhr.response);
-    } else {
-      throw new Error(xhr.statusText);
-    }
-  };
-  xhr.send();
-}

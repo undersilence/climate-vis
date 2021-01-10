@@ -1,59 +1,64 @@
 import * as dat from 'dat.gui';
 import { getJSON } from '/src/util';
 import { windLayer } from './wind-main';
+import { map } from './main';
 
 const gui = new dat.GUI({ autoPlace: false });
 
-export const wind2020 = {
+export const windcontrol = {
+  Wind: false,
   '2020-12-23+h': 0,
-  rotateStep: 100,
+  retina: false,
+  numParticles: 65536,
+  fadeOpacity: 0.95,
+  speedFactor: 0.25,
+  dropRate: 0.003,
+  dropRateBump: 0.01,
 };
 
-const windFiles = {
-  0: '2020122300',
-  6: '2020122306',
-  12: '2020122312',
-  18: '2020122318',
-  24: '2020122400',
-  30: '2020122406',
-  36: '2020122412',
-  42: '2020122418',
-  48: '2020122500',
-  54: '2020122506',
-  60: '2020122512',
-  66: '2020122518',
-  72: '2020122600',
-  78: '2020122606',
-  84: '2020122612',
-  90: '2020122618',
-  96: '2020122700',
-  102: '2020122706',
-  108: '2020122712',
-  114: '2020122718',
-  120: '2020122800',
-  126: '2020122806',
-  132: '2020122812',
-  138: '2020122818',
-  144: '2020122900',
-  150: '2020122906',
-  156: '2020122912',
-  162: '2020122918',
+export const heatcontrol = {
+  Heat: false,
 };
+
+function showWindLayer() {
+  if (windcontrol.Wind) {map.addLayer(windLayer);}
+  else {map.removeLayer("wind-layer");}
+}
 
 function updateWind(name) {
-  getJSON(`wind2020/${windFiles[name]}.json`, (windData) => {
-    const windImage = new Image();
-    windData.image = windImage;
-    windImage.src = `wind2020/${windFiles[name]}.png`;
-    windImage.onload = () => {
-      if (windLayer) {windLayer.wind.setWind(windData);}
-      else {console.log("windLayer is NULL");}
-    };
-  });
+  if (windLayer.wind) {windLayer.wind.updateWind(name);}
+  else {console.log("windLayer.wind is NULL");}
+}
+
+function updateParameters(param) {
+  if (windLayer.wind) {
+    windLayer.wind.numParticles = windcontrol.numParticles;
+    windLayer.wind.fadeOpacity = windcontrol.fadeOpacity;
+    windLayer.wind.speedFactor = windcontrol.speedFactor;
+    windLayer.wind.dropRate = windcontrol.dropRate;
+    windLayer.wind.dropRateBump = windcontrol.dropRateBump;
+  }
+  else {console.log("windLayer.wind is NULL");}
+}
+
+function updateRetina() {
+  if (windLayer.wind) {windLayer.wind.updateRetina(windcontrol.retina);}
+  else {console.log("windLayer.wind is NULL");}
 }
 
 export function loadControls() {
-  document.getElementById('windgl2020-controls').appendChild(gui.domElement);
-  gui.add(wind2020, '2020-12-23+h', 0, 162, 6).onFinishChange(updateWind);
-  gui.add(wind2020, 'rotateStep', 20, 200, 10);
+  document.getElementById('controls').appendChild(gui.domElement);
+
+  // Wind Controls
+  gui.add(windcontrol, 'Wind').onFinishChange(showWindLayer);
+  gui.add(windcontrol, '2020-12-23+h', 0, 162, 6).onFinishChange(updateWind);
+  gui.add(windcontrol, 'numParticles', 1024, 589824).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'fadeOpacity', 0.96, 0.999).step(0.001).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'speedFactor', 0.05, 1.0).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'dropRate', 0, 0.1).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'dropRateBump', 0, 0.2).onFinishChange(updateParameters);
+  // gui.add(windcontrol, 'retina').onFinishChange(updateRetina);  // not work
+
+  // Heat Controls
+
 }

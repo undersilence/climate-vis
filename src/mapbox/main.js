@@ -6,7 +6,7 @@ import { loadControls } from './controls';
 loadControls();
 
 mapboxgl.accessToken = MAPBOX_TOKEN;
-const map = new mapboxgl.Map({
+export const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/dark-v10',
   center: [121.48, 31.22],
@@ -116,7 +116,7 @@ map.on('load', () => {
       map.removeLayer(layers[i].id);
     }
   }
-  map.addLayer(windLayer);
+  // map.addLayer(windLayer);
   // map.addLayer(highlightLayer);
 });
 

@@ -8,6 +8,8 @@ import quadVert from './shaders/quad.vert.glsl';
 import screenFrag from './shaders/screen.frag.glsl';
 import updateFrag from './shaders/update.frag.glsl';
 
+import { windFiles } from './wind-main';
+
 const defaultRampColors = {
   0.0: '#3288bd',
   0.1: '#66c2a5',
@@ -35,6 +37,8 @@ export default class WindGL {
     this.quadBuffer = util.createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
     this.framebuffer = gl.createFramebuffer();
     this.mvpMatrix = null;
+    this.retina = false;
+    this.numParticles = 65536;
 
     this.setColorRamp(defaultRampColors);
     this.resize();
@@ -111,6 +115,28 @@ export default class WindGL {
   setWind(windData) {
     this.windData = windData;
     this.windTexture = util.createTexture(this.gl, this.gl.LINEAR, windData.image);
+  }
+  
+  updateWind(name) {
+    console.log("Updating wind: ", name);
+    getJSON(`wind2020/${windFiles[name]}.json`, (windData) => {
+      const windImage = new Image();
+      windData.image = windImage;
+      windImage.src = `wind2020/${windFiles[name]}.png`;
+      windImage.onload = () => {
+        this.setWind(windData);
+      };
+    });
+  }
+
+  updateRetina(retina) {
+    console.log("Turing Retina: ", retina);
+    const pxRatio = Math.max(Math.floor(window.devicePixelRatio) || 1, 2);
+    this.retina = retina
+    const ratio = this.retina ? pxRatio : 1;
+    this.gl.canvas.width = this.gl.canvas.clientWidth * ratio;
+    this.gl.canvas.height = this.gl.canvas.clientHeight * ratio;
+    this.resize();
   }
 
   draw(matrix) {
@@ -234,3 +260,18 @@ function getColorRamp(colors) {
 
   return new Uint8Array(ctx.getImageData(0, 0, 256, 1).data);
 }
+
+function getJSON(url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = 'json';
+  xhr.open('get', url, true);
+  xhr.onload = () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      callback(xhr.response);
+    } else {
+      throw new Error(xhr.statusText);
+    }
+  };
+  xhr.send();
+}
+

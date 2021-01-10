@@ -80,3 +80,6 @@ export function bindFramebuffer(gl, framebuffer, texture) {
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
   }
 }
+
+
+
