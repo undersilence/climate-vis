@@ -1,5 +1,4 @@
 import * as dat from 'dat.gui';
-import { getJSON } from '/src/util';
 import { heatLayer, windLayer } from './wind-main';
 
 const gui = new dat.GUI({ autoPlace: false });

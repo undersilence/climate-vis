@@ -1,7 +1,6 @@
 import * as util from '/src/mapbox/util';
 import WindGL from '/src/mapbox/windgl';
-import pVert from './shaders_ext/particle.vert.glsl';
-import pFrag from './shaders_ext/particle.frag.glsl';
+import HeatGL from '/src/mapbox/heatgl';
 
 export const windLayer = {
   id: 'wind-layer',
