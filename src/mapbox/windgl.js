@@ -8,18 +8,7 @@ import quadVert from './shaders/quad.vert.glsl';
 import screenFrag from './shaders/screen.frag.glsl';
 import updateFrag from './shaders/update.frag.glsl';
 
-import { windFiles } from './wind-main';
-
-const defaultRampColors = {
-  0.0: '#3288bd',
-  0.1: '#66c2a5',
-  0.2: '#abdda4',
-  0.3: '#e6f598',
-  0.4: '#fee08b',
-  0.5: '#fdae61',
-  0.6: '#f46d43',
-  1.0: '#d53e4f',
-};
+import { windFiles, defaultRampColors } from '/src/const';
 
 export default class WindGL {
   constructor(gl) {
@@ -69,7 +58,7 @@ export default class WindGL {
     this.colorRampTexture = util.createTexture(
       this.gl,
       this.gl.LINEAR,
-      getColorRamp(colors),
+      util.getColorRamp(colors),
       16,
       16,
     );
@@ -116,10 +105,10 @@ export default class WindGL {
     this.windData = windData;
     this.windTexture = util.createTexture(this.gl, this.gl.LINEAR, windData.image);
   }
-  
+
   updateWind(name) {
-    console.log("Updating wind: ", name);
-    getJSON(`wind2020/${windFiles[name]}.json`, (windData) => {
+    console.log('Updating wind: ', name);
+    util.getJSON(`wind2020/${windFiles[name]}.json`, (windData) => {
       const windImage = new Image();
       windData.image = windImage;
       windImage.src = `wind2020/${windFiles[name]}.png`;
@@ -130,9 +119,9 @@ export default class WindGL {
   }
 
   updateRetina(retina) {
-    console.log("Turing Retina: ", retina);
+    console.log('Turing Retina: ', retina);
     const pxRatio = Math.max(Math.floor(window.devicePixelRatio) || 1, 2);
-    this.retina = retina
+    this.retina = retina;
     const ratio = this.retina ? pxRatio : 1;
     this.gl.canvas.width = this.gl.canvas.clientWidth * ratio;
     this.gl.canvas.height = this.gl.canvas.clientHeight * ratio;
@@ -241,37 +230,3 @@ export default class WindGL {
     this.particleStateTexture1 = temp;
   }
 }
-
-function getColorRamp(colors) {
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-
-  canvas.width = 256;
-  canvas.height = 1;
-
-  const gradient = ctx.createLinearGradient(0, 0, 256, 0);
-  // eslint-disable-next-line no-restricted-syntax
-  for (const stop of Object.keys(colors)) {
-    gradient.addColorStop(+stop, colors[stop]);
-  }
-
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, 256, 1);
-
-  return new Uint8Array(ctx.getImageData(0, 0, 256, 1).data);
-}
-
-function getJSON(url, callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.responseType = 'json';
-  xhr.open('get', url, true);
-  xhr.onload = () => {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      callback(xhr.response);
-    } else {
-      throw new Error(xhr.statusText);
-    }
-  };
-  xhr.send();
-}
-

@@ -3,8 +3,6 @@ import { MAPBOX_TOKEN } from '/src/const';
 import { windLayer } from './wind-main';
 import { loadControls } from './controls';
 
-loadControls();
-
 mapboxgl.accessToken = MAPBOX_TOKEN;
 export const map = new mapboxgl.Map({
   container: 'map',
@@ -17,6 +15,9 @@ export const map = new mapboxgl.Map({
   antialias: true,
   minZoom: 2,
 });
+
+loadControls(map);
+
 // create a custom style layer to implement the WebGL content
 const highlightLayer = {
   id: 'highlight',

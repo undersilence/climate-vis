@@ -81,5 +81,35 @@ export function bindFramebuffer(gl, framebuffer, texture) {
   }
 }
 
+export function getColorRamp(colors) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
 
+  canvas.width = 256;
+  canvas.height = 1;
 
+  const gradient = ctx.createLinearGradient(0, 0, 256, 0);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const stop of Object.keys(colors)) {
+    gradient.addColorStop(+stop, colors[stop]);
+  }
+
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 256, 1);
+
+  return new Uint8Array(ctx.getImageData(0, 0, 256, 1).data);
+}
+
+export function getJSON(url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = 'json';
+  xhr.open('get', url, true);
+  xhr.onload = () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      callback(xhr.response);
+    } else {
+      throw new Error(xhr.statusText);
+    }
+  };
+  xhr.send();
+}
