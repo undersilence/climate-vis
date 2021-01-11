@@ -13,7 +13,7 @@ export const map = new mapboxgl.Map({
   bearing: -17.6,
   renderWorldCopies: false,
   antialias: true,
-  minZoom: 2,
+  // minZoom: 2,
 });
 
 loadControls(map);
@@ -73,6 +73,14 @@ const highlightLayer = {
     });
 
     // create and initialize a WebGLBuffer to store vertex and color data
+    console.log(`example ${new Float32Array([
+      helsinki.x,
+      helsinki.y,
+      berlin.x,
+      berlin.y,
+      kyiv.x,
+      kyiv.y,
+    ])}`);
     this.buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
     gl.bufferData(
@@ -118,7 +126,7 @@ map.on('load', () => {
     }
   }
   // map.addLayer(windLayer);
-  // map.addLayer(highlightLayer);
+  map.addLayer(highlightLayer);
 });
 
 map.on('wheel', () => {

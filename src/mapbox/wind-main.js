@@ -37,5 +37,18 @@ export const heatLayer = {
   onAdd(map, gl) {
     this.map = map;
     this.heat = new HeatGL(gl);
+    this.heat.resolution = 512;
+    this.heat.updateHeat(0);
+  },
+
+  // Render loop
+  // WARNING: Run iff user triggered event
+  render(gl, matrix) {
+    if (this.heat.heatData) {
+      this.heat.draw(matrix);
+      this.map.triggerRepaint();
+      return true;
+    }
+    return false;
   },
 };

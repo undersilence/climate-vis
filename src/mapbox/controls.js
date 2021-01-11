@@ -5,7 +5,6 @@ const gui = new dat.GUI({ autoPlace: false });
 
 export const windcontrol = {
   Wind: false,
-  Heat: false,
   '2020-12-23+h': 0,
   retina: false,
   numParticles: 65536,
@@ -13,6 +12,9 @@ export const windcontrol = {
   speedFactor: 0.25,
   dropRate: 0.003,
   dropRateBump: 0.01,
+  Heat: false,
+  resolution: 256,
+  scale: 0.1,
 };
 
 function showWindLayer(map) {
@@ -34,7 +36,11 @@ function updateParameters(param) {
     windLayer.wind.speedFactor = windcontrol.speedFactor;
     windLayer.wind.dropRate = windcontrol.dropRate;
     windLayer.wind.dropRateBump = windcontrol.dropRateBump;
-  } else { console.log('windLayer.wind is NULL'); }
+  }
+  if (heatLayer.heat) {
+    heatLayer.heat.resolution = windcontrol.resolution;
+    heatLayer.heat.scale = windcontrol.scale;
+  }
 }
 
 function updateRetina() {
@@ -46,13 +52,15 @@ export function loadControls(map) {
 
   // Wind Controls
   gui.add(windcontrol, 'Wind').onFinishChange(() => showWindLayer(map));
-  gui.add(windcontrol, 'Heat').onFinishChange(() => showHeatLayer(map));
   gui.add(windcontrol, '2020-12-23+h', 0, 162, 6).onFinishChange(updateWind);
   gui.add(windcontrol, 'numParticles', 1024, 589824).onFinishChange(updateParameters);
   gui.add(windcontrol, 'fadeOpacity', 0.96, 0.999).step(0.001).onFinishChange(updateParameters);
   gui.add(windcontrol, 'speedFactor', 0.05, 1.0).onFinishChange(updateParameters);
   gui.add(windcontrol, 'dropRate', 0, 0.1).onFinishChange(updateParameters);
   gui.add(windcontrol, 'dropRateBump', 0, 0.2).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'Heat').onFinishChange(() => showHeatLayer(map));
+  gui.add(windcontrol, 'resolution', 64, 1024).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'scale', 0.01, 0.2, 0.1).step(0.001).onFinishChange(updateParameters);
   // gui.add(windcontrol, 'retina').onFinishChange(updateRetina);  // not work
 
   // if (windcontrol.Wind) { showWindLayer(map); }

@@ -1,3 +1,5 @@
+import { LngLat } from 'mapbox-gl';
+
 export const MAPBOX_TOKEN = 'pk.eyJ1IjoibWV0YXJ1IiwiYSI6ImNramJhNzdxMjJ2dzkyc25wejU5cHF5OXQifQ.JiODlDyjY9H6v2bSNV6KFw';
 
 export const windFiles = {
@@ -33,6 +35,8 @@ export const windFiles = {
 
 export const heatFiles = {
   0: '2020122300',
+  404: 'test1',
+  405: 'test2',
 };
 
 export const defaultRampColors = {
@@ -45,3 +49,8 @@ export const defaultRampColors = {
   0.6: '#f46d43',
   1.0: '#d53e4f',
 };
+
+export const LNG_MIN = -180.0;
+export const LNG_MAX = 180.0;
+export const LAT_MAX = 90;
+export const LAT_MIN = -90;

@@ -1,3 +1,7 @@
+import {
+  LNG_MIN, LNG_MAX, LAT_MIN, LAT_MAX,
+} from '../const';
+
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
   gl.shaderSource(shader, source);
@@ -112,4 +116,38 @@ export function getJSON(url, callback) {
     }
   };
   xhr.send();
+}
+
+export function getText(url, callback) {
+  const xhr = new XMLHttpRequest();
+  xhr.responseType = 'text';
+  xhr.open('get', url, true);
+  xhr.onload = () => {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      callback(xhr.response);
+    } else {
+      throw new Error(xhr.statusText);
+    }
+  };
+  xhr.send();
+}
+
+export function convertUV2LngLat(u, v) {
+  return {
+    lng: lerp(LNG_MIN, LNG_MAX, u),
+    lat: lerp(LAT_MAX, LAT_MIN, v),
+  };
+}
+
+export function lerp(a, b, p) {
+  return a * (1.0 - p) + b * p;
+}
+
+export function linstep(a, b, u) {
+  return clamp((u - a) / (b - a), 0, 1);
+}
+
+export function clamp(x, a, b) {
+  // eslint-disable-next-line no-nested-ternary
+  return (x > a ? (x < b ? x : b) : a);
 }

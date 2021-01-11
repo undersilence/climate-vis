@@ -1,7 +1,6 @@
 precision mediump float;
 
 attribute float a_index;
-
 uniform sampler2D u_particles;
 uniform float u_particles_res;
 uniform mat4 u_matrix;

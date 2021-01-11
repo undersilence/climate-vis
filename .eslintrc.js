@@ -33,5 +33,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-absolute-path': 'off',
     'linebreak-style': 'off',
+    'max-len': 'off',
   },
 };
