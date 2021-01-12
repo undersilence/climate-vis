@@ -28,6 +28,11 @@ export const windLayer = {
   },
 };
 
+export function enableWebGLExtensions(gl) {
+  console.log(gl.getSupportedExtensions());
+  gl.getExtension('OES_element_index_uint');
+}
+
 export const heatLayer = {
   id: 'heat-layer',
   type: 'custom',
@@ -35,9 +40,10 @@ export const heatLayer = {
   map: null,
 
   onAdd(map, gl) {
+    enableWebGLExtensions(gl);
     this.map = map;
     this.heat = new HeatGL(gl);
-    this.heat.resolution = 512;
+    this.heat.resolution = 256;
     this.heat.updateHeat(0);
   },
 

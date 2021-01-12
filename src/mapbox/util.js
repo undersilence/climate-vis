@@ -72,6 +72,14 @@ export function createBuffer(gl, data) {
   return buffer;
 }
 
+// @ MetaRu
+export function createIndexBuffer(gl, data) {
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, data, gl.STATIC_DRAW);
+  return buffer;
+}
+
 export function bindAttribute(gl, buffer, attribute, numComponents) {
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.enableVertexAttribArray(attribute);

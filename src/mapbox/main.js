@@ -26,7 +26,7 @@ const highlightLayer = {
   // method called when the layer is added to the map
   // https://docs.mapbox.com/mapbox-gl-js/api/#styleimageinterface#onadd
   onAdd(map, gl) {
-  // create GLSL source for vertex shader
+    // create GLSL source for vertex shader
     const vertexSource = ''
   + 'uniform mat4 u_matrix;'
   + 'attribute vec2 a_pos;'

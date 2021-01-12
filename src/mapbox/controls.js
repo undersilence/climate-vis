@@ -13,6 +13,7 @@ export const windcontrol = {
   dropRate: 0.03,
   dropRateBump: 0.01,
   Heat: false,
+  showMesh: false,
   resolution: 256,
   scale: 0.1,
 };
@@ -40,6 +41,7 @@ function updateParameters(param) {
   if (heatLayer.heat) {
     heatLayer.heat.resolution = windcontrol.resolution;
     heatLayer.heat.scale = windcontrol.scale;
+    heatLayer.heat.showMesh = windcontrol.showMesh;
   }
 }
 
@@ -58,8 +60,10 @@ export function loadControls(map) {
   gui.add(windcontrol, 'speedFactor', 0.05, 1.0).onFinishChange(updateParameters);
   gui.add(windcontrol, 'dropRate', 0, 0.1).onFinishChange(updateParameters);
   gui.add(windcontrol, 'dropRateBump', 0, 0.2).onFinishChange(updateParameters);
+
   gui.add(windcontrol, 'Heat').onFinishChange(() => showHeatLayer(map));
-  gui.add(windcontrol, 'resolution', 64, 1024).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'showMesh').onFinishChange(updateParameters);
+  gui.add(windcontrol, 'resolution', 4, 1024).step(2).onFinishChange(updateParameters);
   gui.add(windcontrol, 'scale', 0.01, 0.2, 0.1).step(0.001).onFinishChange(updateParameters);
   // gui.add(windcontrol, 'retina').onFinishChange(updateRetina);  // not work
 

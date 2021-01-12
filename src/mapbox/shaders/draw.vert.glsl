@@ -6,12 +6,7 @@ uniform sampler2D u_particles;
 uniform float u_particles_res;
 uniform mat4 u_matrix;
 
-uniform sampler2D u_wind;
-uniform vec2 u_wind_min;
-uniform vec2 u_wind_max;
-
 varying vec2 v_particle_pos;
-
 
 vec2 texcoords2LngLat(vec2 texcoords) {
     return vec2(mix(-180.0, 180.0, texcoords.x), mix(-90.0, 90.0, texcoords.y));
