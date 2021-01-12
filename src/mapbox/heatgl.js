@@ -74,15 +74,13 @@ export default class HeatGL {
       const v = i / (this._res - 1);
       const lat = util.lerp(LAT_MAX, LAT_MIN, v);
 
-      if (lat < 85.05112877980659 && lat > -85.05112877980659) {
+      if (lat <= 85.05112877980659 && lat >= -85.05112877980659) {
         for (let j = 0; j < this._res; j++, k++) {
           const u = j / (this._res - 1);
           const lng = util.lerp(LNG_MIN, LNG_MAX, u);
           const res = mapboxgl.MercatorCoordinate.fromLngLat({ lng, lat });
-          this.gridData.push(res.x);
-          this.gridData.push(res.y);
-          this.gridData.push(u);
-          this.gridData.push(v);
+
+          this.gridData.push(res.x, res.y, u, v);
           this.gridLength++;
           // console.log(`diff(${j / (this._res - 1) - res.x}, ${i / (this._res - 1) - res.y})`);
         }

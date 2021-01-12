@@ -10,7 +10,7 @@ export const windcontrol = {
   numParticles: 65536,
   fadeOpacity: 0.95,
   speedFactor: 0.25,
-  dropRate: 0.003,
+  dropRate: 0.03,
   dropRateBump: 0.01,
   Heat: false,
   resolution: 256,
