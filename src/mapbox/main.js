@@ -126,7 +126,7 @@ map.on('load', () => {
     }
   }
   // map.addLayer(windLayer);
-  map.addLayer(highlightLayer);
+  // map.addLayer(highlightLayer);
 });
 
 map.on('wheel', () => {

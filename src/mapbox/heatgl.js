@@ -18,7 +18,8 @@ export default class HeatGL {
 
     // attributes
     this.scale = 0.1;
-    this.opacity = 0.95;
+    this.offset = 0.0;
+    this.opacity = 0.5;
     this.showMesh = false;
 
     this.quadBuffer = util.createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
@@ -220,6 +221,7 @@ export default class HeatGL {
     util.bindTexture(gl, this.colorRampTexture, 2);
 
     gl.uniform1f(shader.u_scale, this.scale);
+    gl.uniform1f(shader.u_offset, this.offset);
     gl.uniform1f(shader.u_res, this.resolution);
     gl.uniform1f(shader.u_opacity, this.opacity);
     gl.uniform1i(shader.u_heat, 0);

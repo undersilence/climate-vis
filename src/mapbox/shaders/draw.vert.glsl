@@ -6,6 +6,10 @@ uniform sampler2D u_particles;
 uniform float u_particles_res;
 uniform mat4 u_matrix;
 
+uniform sampler2D u_wind;
+uniform vec2 u_wind_min;
+uniform vec2 u_wind_max;
+
 varying vec2 v_particle_pos;
 
 vec2 texcoords2LngLat(vec2 texcoords) {
@@ -29,6 +33,9 @@ void main() {
         color.r / 255.0 + color.b,
         color.g / 255.0 + color.a);
 
+    vec2 velocity = mix(u_wind_min, u_wind_max, texture2D(u_wind, v_particle_pos).rg);
+    float speed_t = length(velocity) / length(u_wind_max);
+
     gl_PointSize = 1.0;
     vec2 fixed_particle_pos = texcoords2LngLat(v_particle_pos);
     if(fixed_particle_pos.y > 85.05112877980659 || fixed_particle_pos.y < -85.05112877980659) {
@@ -36,6 +43,6 @@ void main() {
     }
     fixed_particle_pos = lngLat2NormWebMercator(fixed_particle_pos);
 
-    gl_Position = u_matrix * vec4(v_particle_pos.x, v_particle_pos.y, 0, 1);
-    gl_Position = u_matrix * vec4(fixed_particle_pos.x, fixed_particle_pos.y, 0, 1);
+    // gl_Position = u_matrix * vec4(v_particle_pos.x, v_particle_pos.y, 0, 1);
+    gl_Position = u_matrix * vec4(fixed_particle_pos.x, fixed_particle_pos.y,speed_t * 0.02, 1);
 }

@@ -6,6 +6,7 @@ precision mediump float;
 attribute float a_index;
 
 uniform float u_scale;
+uniform float u_offset;
 uniform float u_res;
 uniform mat4 u_matrix;
 uniform sampler2D u_heat;
@@ -34,5 +35,5 @@ void main() {
 
   vec4 heat = texture2D(u_heat, v_coords);
   gl_PointSize = 2.0;
-  gl_Position = u_matrix * vec4(mercator_coords, u_scale * heat.x, 1.0);
+  gl_Position = u_matrix * vec4(mercator_coords, u_scale * heat.x + u_offset, 1.0);
 }

@@ -16,6 +16,8 @@ export const windcontrol = {
   showMesh: false,
   resolution: 256,
   scale: 0.1,
+  offset: 0.0,
+  opacity: 0.9,
 };
 
 function showWindLayer(map) {
@@ -41,7 +43,9 @@ function updateParameters(param) {
   if (heatLayer.heat) {
     heatLayer.heat.resolution = windcontrol.resolution;
     heatLayer.heat.scale = windcontrol.scale;
+    heatLayer.heat.offset = windcontrol.offset;
     heatLayer.heat.showMesh = windcontrol.showMesh;
+    heatLayer.heat.opacity = windcontrol.opacity;
   }
 }
 
@@ -65,6 +69,8 @@ export function loadControls(map) {
   gui.add(windcontrol, 'showMesh').onFinishChange(updateParameters);
   gui.add(windcontrol, 'resolution', 4, 1024).step(2).onFinishChange(updateParameters);
   gui.add(windcontrol, 'scale', 0.01, 0.2, 0.1).step(0.001).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'offset', -0.1, 0.1, 0.0).step(0.001).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'opacity', 0.0, 1.0, 0.9).step(0.01).onFinishChange(updateParameters);
   // gui.add(windcontrol, 'retina').onFinishChange(updateRetina);  // not work
 
   // if (windcontrol.Wind) { showWindLayer(map); }
