@@ -17,7 +17,7 @@ export default class WindGL {
     // attributes
     this.fadeOpacity = 0.95; // how fast the particle trails fade on each frame
     this.speedFactor = 0.25; // how fast the particles move
-    this.dropRate = 0.003; // how often the particles move to a random place
+    this.dropRate = 0.02; // how often the particles move to a random place
     this.dropRateBump = 0.01; // drop rate increase relative to individual particle speed
 
     this.drawProgram = util.createProgram(gl, drawVert, drawFrag);
@@ -109,10 +109,10 @@ export default class WindGL {
 
   updateWind(name) {
     console.log('Updating wind: ', name);
-    util.getJSON(`wind2020/${windFiles[name]}.json`, (windData) => {
+    util.getJSON(`wind/${windFiles[name]}.json`, (windData) => {
       const windImage = new Image();
       windData.image = windImage;
-      windImage.src = `wind2020/${windFiles[name]}.png`;
+      windImage.src = `wind/${windFiles[name]}.png`;
       windImage.onload = () => {
         this.setWind(windData);
       };

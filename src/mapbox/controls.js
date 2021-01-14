@@ -5,7 +5,7 @@ const gui = new dat.GUI({ autoPlace: false });
 
 export const windcontrol = {
   Wind: false,
-  '2020-12-23+h': 0,
+  '2021-01-02+h': 0,
   retina: false,
   numParticles: 65536,
   fadeOpacity: 0.95,
@@ -17,7 +17,7 @@ export const windcontrol = {
   resolution: 256,
   scale: 0.1,
   offset: 0.0,
-  opacity: 0.9,
+  opacity: 0.6,
 };
 
 function showWindLayer(map) {
@@ -30,6 +30,10 @@ function showHeatLayer(map) {
 
 function updateWind(name) {
   if (windLayer.wind) { windLayer.wind.updateWind(name); } else { console.log('windLayer.wind is NULL'); }
+}
+
+function updateHeat(name) {
+  if (heatLayer.heat) { heatLayer.heat.updateHeat(name); } else { console.log('heatLayer.wind is NULL'); }
 }
 
 function updateParameters(param) {
@@ -58,7 +62,7 @@ export function loadControls(map) {
 
   // Wind Controls
   gui.add(windcontrol, 'Wind').onFinishChange(() => showWindLayer(map));
-  gui.add(windcontrol, '2020-12-23+h', 0, 162, 6).onFinishChange(updateWind);
+  gui.add(windcontrol, '2021-01-02+h', 0, 162, 6).onFinishChange((name) => { updateWind(name); updateHeat(name); });
   gui.add(windcontrol, 'numParticles', 1024, 589824).onFinishChange(updateParameters);
   gui.add(windcontrol, 'fadeOpacity', 0.96, 0.999).step(0.001).onFinishChange(updateParameters);
   gui.add(windcontrol, 'speedFactor', 0.05, 1.0).onFinishChange(updateParameters);
@@ -70,7 +74,7 @@ export function loadControls(map) {
   gui.add(windcontrol, 'resolution', 4, 1024).step(2).onFinishChange(updateParameters);
   gui.add(windcontrol, 'scale', 0.01, 0.2, 0.1).step(0.001).onFinishChange(updateParameters);
   gui.add(windcontrol, 'offset', -0.1, 0.1, 0.0).step(0.001).onFinishChange(updateParameters);
-  gui.add(windcontrol, 'opacity', 0.0, 1.0, 0.9).step(0.01).onFinishChange(updateParameters);
+  gui.add(windcontrol, 'opacity', 0.0, 1.0, 0.6).step(0.01).onFinishChange(updateParameters);
   // gui.add(windcontrol, 'retina').onFinishChange(updateRetina);  // not work
 
   // if (windcontrol.Wind) { showWindLayer(map); }

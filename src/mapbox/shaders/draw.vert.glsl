@@ -39,7 +39,8 @@ void main() {
     gl_PointSize = 1.0;
     vec2 fixed_particle_pos = texcoords2LngLat(v_particle_pos);
     if(fixed_particle_pos.y > 85.05112877980659 || fixed_particle_pos.y < -85.05112877980659) {
-        fixed_particle_pos = vec2(0, 0);
+        fixed_particle_pos = vec2(1.5, 1.5);
+        speed_t = 0.0;
     }
     fixed_particle_pos = lngLat2NormWebMercator(fixed_particle_pos);
 

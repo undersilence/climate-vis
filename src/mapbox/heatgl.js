@@ -19,7 +19,7 @@ export default class HeatGL {
     // attributes
     this.scale = 0.1;
     this.offset = 0.0;
-    this.opacity = 0.5;
+    this.opacity = 0.6;
     this.showMesh = false;
 
     this.quadBuffer = util.createBuffer(gl, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]));
@@ -149,7 +149,7 @@ export default class HeatGL {
     return this._res;
   }
 
-  setHeat(heatData) {
+  setheat(heatData) {
     // heatData.array = new Float32Array(heatData.array);
     // @MetaRu test big triangle
     // heatData.array = new Float32Array([0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0]);
@@ -160,17 +160,15 @@ export default class HeatGL {
   }
 
   updateHeat(name) {
-    const heatData = {};
-    const heatImage = new Image();
-
-    heatData.image = heatImage;
-    heatImage.src = `heat/${heatFiles[name]}.png`;
-    heatImage.onload = () => {
-      heatData.height = heatImage.height;
-      heatData.width = heatImage.width;
-      this.setHeat(heatData);
-    };
     console.log('Updating heat: ', name);
+    util.getJSON(`heat/${heatFiles[name]}.json`, (heatData) => {
+      const heatImage = new Image();
+      heatData.image = heatImage;
+      heatImage.src = `heat/${heatFiles[name]}.png`;
+      heatImage.onload = () => {
+        this.setheat(heatData);
+      };
+    });
   }
 
   draw(matrix) {
@@ -226,6 +224,9 @@ export default class HeatGL {
     gl.uniform1f(shader.u_opacity, this.opacity);
     gl.uniform1i(shader.u_heat, 0);
     gl.uniform1i(shader.u_color_ramp, 2);
+    gl.uniform1f(shader.u_heat_min, this.heatData.tMin);
+    gl.uniform1f(shader.u_heat_max, this.heatData.tMax);
+
     // gl.uniform1f(shader.u_max_heat, this.heatData.maxHeat);
     gl.uniformMatrix4fv(shader.u_matrix, false, mvpMatrix);
 
@@ -236,7 +237,7 @@ export default class HeatGL {
     // console.log(`drawArrays length:${this.heatData.length}`);
     if (this.showMesh) {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.trianglesIndexBuffer);
-      console.log(`_numTriangles:${this._numTriangles}`);
+      // console.log(`_numTriangles:${this._numTriangles}`);
       // gl.drawElements(gl.LINES, this._numTriangles, gl.UNSIGNED_SHORT, 0);
       // @MetaRu
       // need open WebGL extensions 'OES_element_index_uint'
@@ -245,7 +246,7 @@ export default class HeatGL {
       gl.drawElements(gl.TRIANGLES, this._numTriangles, gl.UNSIGNED_INT, 0);
     } else {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.linesIndexBuffer);
-      console.log(`_numLines:${this._numLines}`);
+      // console.log(`_numLines:${this._numLines}`);
       gl.drawElements(gl.LINES, this._numLines, gl.UNSIGNED_INT, 0);
     }
   }
